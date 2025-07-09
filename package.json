@@ -8,8 +8,7 @@
   "exports": {
     ".": {
       "require": "./dist/cjs/NumberFormatter.js",
-      "import": "./dist/esm/NumberFormatter.mjs",
-      "types": "./dist/types/NumberFormatter.d.ts"
+      "import": "./dist/esm/NumberFormatter.mjs"
     }
   },
   "files": [
