@@ -1,6 +1,6 @@
 {
   "name": "@dev-henen/svelte-number-formatter",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Simple reactive number formatter for Svelte + TypeScript inputs",
   "main": "./dist/cjs/NumberFormatter.js",
   "module": "./dist/esm/NumberFormatter.mjs",
