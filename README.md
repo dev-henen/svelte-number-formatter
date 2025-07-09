@@ -13,8 +13,16 @@ Supports:
 
 ## 📦 Installation
 
+### From npm (public)
+
 ```bash
 npm install svelte-number-formatter
+````
+
+### From GitHub Packages
+
+```bash
+npm install @dev-henen/svelte-number-formatter --registry=https://npm.pkg.github.com
 ```
 
 📁 GitHub Repository: [github.com/dev-henen/svelte-number-formatter](https://github.com/dev-henen/svelte-number-formatter)
@@ -166,7 +174,8 @@ console.log(formatter.raw);       // "456789.123"
 ## 🔗 Links
 
 * 📁 GitHub: [https://github.com/dev-henen/svelte-number-formatter](https://github.com/dev-henen/svelte-number-formatter)
-* 📦 NPM (after publish): `https://www.npmjs.com/package/svelte-number-formatter`
+* 📦 NPM: [https://www.npmjs.com/package/svelte-number-formatter](https://www.npmjs.com/package/svelte-number-formatter)
+* 📦 GitHub Package: [https://github.com/dev-henen/svelte-number-formatter/packages](https://github.com/dev-henen/svelte-number-formatter/packages)
 
 ---
 
@@ -181,3 +190,5 @@ MIT © [dev-henen](https://github.com/dev-henen)
 * [ ] `use:numberFormatter` Svelte action
 * [ ] Store-based interface (`formatter.subscribe()`)
 * [ ] Auto-detection of locale from browser
+
+```

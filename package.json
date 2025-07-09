@@ -1,5 +1,5 @@
 {
-  "name": "svelte-number-formatter",
+  "name": "@dev-henen/svelte-number-formatter",
   "version": "1.0.0",
   "description": "Simple reactive number formatter for Svelte + TypeScript inputs",
   "main": "dist/NumberFormatter.js",
@@ -10,14 +10,25 @@
       "types": "./dist/NumberFormatter.d.ts"
     }
   },
-  "author": "Your Name",
+  "author": "dev-henen",
   "license": "MIT",
-  "keywords": ["svelte", "number", "formatter", "input", "currency", "decimal", "typescript"],
+  "keywords": [
+    "svelte",
+    "number",
+    "formatter",
+    "input",
+    "currency",
+    "decimal",
+    "typescript"
+  ],
   "scripts": {
     "build": "tsc"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
     "svelte": "^4.0.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   }
 }
