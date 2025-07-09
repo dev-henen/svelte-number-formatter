@@ -10,6 +10,16 @@
       "types": "./dist/types/NumberFormatter.d.ts",
       "require": "./dist/cjs/NumberFormatter.js",
       "import": "./dist/esm/NumberFormatter.mjs"
+    },
+    "./utils": {
+      "types": "./dist/types/utils/numberFormat.d.ts",
+      "require": "./dist/cjs/utils/numberFormat.js",
+      "import": "./dist/esm/utils/numberFormat.mjs"
+    },
+    "./action": {
+      "types": "./dist/types/actions/useNumberFormatter.d.ts",
+      "require": "./dist/cjs/actions/useNumberFormatter.js",
+      "import": "./dist/esm/actions/useNumberFormatter.mjs"
     }
   },
   "files": [
