@@ -210,23 +210,6 @@ formatter.setOptions({
 
 ---
 
-Great! Here's a **commit message** along with the necessary **README update** to reflect the new `use:numberFormatter` Svelte action — fully aligned with your package’s UX philosophy (no formatting options during typing).
-
----
-
-## ✅ Commit Message
-
-```bash
-feat: add `use:numberFormatter` Svelte action with delayed formatting options
-
-- Introduced a Svelte action for real-time input formatting
-- Avoids passing format options during live input to prevent cursor issues
-- Applies formatting options only on blur
-- Triggers `onChange(raw, formatted)` callback
-```
-
----
-
 ### 📥 `use:numberFormatter` Svelte Action
 
 Easily format `<input>` values using a Svelte action. Live formatting occurs while typing, and formatting options (e.g., currency) are **applied only on blur** to avoid cursor issues.
