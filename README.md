@@ -294,6 +294,10 @@ Use this in any reactive context, or bind to values via `$formatter.formatted`:
 <input bind:value={$formatter.formatted} />
 ```
 
+> 🌐 `locale` is automatically detected from the browser (`navigator.language`), or defaults to `"en-US"` if running in SSR or Node environments.
+
+---
+
 ## 🔗 Links
 
 * 📁 GitHub: [https://github.com/dev-henen/svelte-number-formatter](https://github.com/dev-henen/svelte-number-formatter)
@@ -309,6 +313,3 @@ MIT © [dev-henen](https://github.com/dev-henen)
 ---
 
 ## 🙌 Coming Soon
-
-* [ ] Store-based interface (`formatter.subscribe()`)
-* [ ] Auto-detection of locale from browser

@@ -14,7 +14,10 @@ export class NumberFormatter {
   private _raw = writable("");
 
   private options: FormatOptions = {
-    locale: "en-US",
+    locale:
+      typeof window !== "undefined" && typeof navigator !== "undefined"
+        ? navigator.languages?.[0] || navigator.language
+        : "en-US",
     useGrouping: true,
     decimals: 0,
     style: "decimal",
