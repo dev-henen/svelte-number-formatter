@@ -210,6 +210,66 @@ formatter.setOptions({
 
 ---
 
+Great! Here's a **commit message** along with the necessary **README update** to reflect the new `use:numberFormatter` Svelte action — fully aligned with your package’s UX philosophy (no formatting options during typing).
+
+---
+
+## ✅ Commit Message
+
+```bash
+feat: add `use:numberFormatter` Svelte action with delayed formatting options
+
+- Introduced a Svelte action for real-time input formatting
+- Avoids passing format options during live input to prevent cursor issues
+- Applies formatting options only on blur
+- Triggers `onChange(raw, formatted)` callback
+```
+
+---
+
+### 📥 `use:numberFormatter` Svelte Action
+
+Easily format `<input>` values using a Svelte action. Live formatting occurs while typing, and formatting options (e.g., currency) are **applied only on blur** to avoid cursor issues.
+
+#### ✅ Usage
+
+```svelte
+<script lang="ts">
+	import { numberFormatter } from 'svelte-number-formatter';
+	let raw = '';
+</script>
+
+<input
+	use:numberFormatter={{
+		options: {
+			style: 'currency',
+			currency: 'USD',
+			decimals: 2
+		},
+		onChange: (rawVal, formattedVal) => {
+			raw = rawVal;
+		}
+	}} />
+
+<p>Raw value: {raw}</p>
+```
+
+#### 📌 Notes
+
+* **Avoids passing options to constructor** — keeps typing smooth and uninterrupted.
+* Formatting options are applied only when the input **blurs**.
+* `onChange(raw, formatted)` is triggered on each update.
+* Ideal for declarative usage in forms and custom inputs.
+
+#### 🔧 Parameters
+
+| Key        | Type                               | Description                          |
+| ---------- | ---------------------------------- | ------------------------------------ |
+| `options`  | `FormatOptions`                    | Formatting options (applied on blur) |
+| `onChange` | `(raw: string, formatted: string)` | Callback on input change or blur     |
+
+---
+
 ## 🔗 Links
 
 * 📁 GitHub: [https://github.com/dev-henen/svelte-number-formatter](https://github.com/dev-henen/svelte-number-formatter)
@@ -226,6 +286,5 @@ MIT © [dev-henen](https://github.com/dev-henen)
 
 ## 🙌 Coming Soon
 
-* [ ] `use:numberFormatter` Svelte action
 * [ ] Store-based interface (`formatter.subscribe()`)
 * [ ] Auto-detection of locale from browser
