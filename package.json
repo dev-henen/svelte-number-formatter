@@ -1,5 +1,5 @@
 {
-  "name": "@dev-henen/svelte-number-formatter",
+  "name": "svelte-number-formatter",
   "version": "1.0.5",
   "description": "Simple reactive number formatter for Svelte + TypeScript inputs",
   "main": "./dist/cjs/NumberFormatter.js",
