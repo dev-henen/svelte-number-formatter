@@ -5,7 +5,8 @@
     "module": "CommonJS",
     "target": "ES2019",
     "declaration": true,
-    "declarationDir": "dist/types"
+    "declarationDir": "dist/types",
+    "emitDeclarationOnly": false
   },
   "include": ["src"]
 }

@@ -1,18 +1,22 @@
 {
   "name": "@dev-henen/svelte-number-formatter",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Simple reactive number formatter for Svelte + TypeScript inputs",
-  "type": "module",
   "main": "./dist/cjs/NumberFormatter.js",
-  "module": "./dist/esm/NumberFormatter.js",
+  "module": "./dist/esm/NumberFormatter.mjs",
   "types": "./dist/types/NumberFormatter.d.ts",
   "exports": {
     ".": {
       "require": "./dist/cjs/NumberFormatter.js",
-      "import": "./dist/esm/NumberFormatter.js",
+      "import": "./dist/esm/NumberFormatter.mjs",
       "types": "./dist/types/NumberFormatter.d.ts"
     }
   },
+  "files": [
+    "dist/",
+    "LICENSE",
+    "README.md"
+  ],
   "author": "dev-henen",
   "license": "MIT",
   "keywords": [
@@ -25,15 +29,12 @@
     "typescript"
   ],
   "scripts": {
+    "build": "npm run build:cjs && npm run build:esm && node scripts/rename-to-mjs.js",
     "build:cjs": "tsc -p tsconfig.cjs.json",
-    "build:esm": "tsc -p tsconfig.esm.json",
-    "build": "npm run build:cjs && npm run build:esm"
+    "build:esm": "tsc -p tsconfig.esm.json"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
     "svelte": "^4.0.0"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
   }
 }
