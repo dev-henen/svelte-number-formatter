@@ -1,4 +1,5 @@
 import { writable, get } from "svelte/store";
+import type { Subscriber, Unsubscriber } from "svelte/store";
 
 type FormatOptions = {
   locale?: string;
@@ -85,5 +86,20 @@ export class NumberFormatter {
         ? value.replace(/[^\d.-]/g, "")
         : value.toString();
     return this.formatNumber(str);
+  }
+  subscribe(run: Subscriber<{ raw: string; formatted: string }>): Unsubscriber {
+    const unsubscribeRaw = this._raw.subscribe((raw) => {
+      run({ raw, formatted: get(this._formatted) });
+    });
+
+    const unsubscribeFormatted = this._formatted.subscribe((formatted) => {
+      run({ raw: get(this._raw), formatted });
+    });
+
+    // Return an unsubscribe function
+    return () => {
+      unsubscribeRaw();
+      unsubscribeFormatted();
+    };
   }
 }

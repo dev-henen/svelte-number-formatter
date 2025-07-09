@@ -270,6 +270,30 @@ Easily format `<input>` values using a Svelte action. Live formatting occurs whi
 
 ---
 
+### `subscribe(run)`
+
+Subscribe to changes in both `raw` and `formatted` values (Svelte store interface):
+
+```ts
+const formatter = new NumberFormatter("12345");
+
+const unsubscribe = formatter.subscribe(({ raw, formatted }) => {
+	console.log("Raw:", raw);        // → "12345"
+	console.log("Formatted:", formatted); // → "12,345"
+});
+```
+
+Use this in any reactive context, or bind to values via `$formatter.formatted`:
+
+```svelte
+<script lang="ts">
+	import { NumberFormatter } from 'svelte-number-formatter';
+	const formatter = new NumberFormatter("0");
+</script>
+
+<input bind:value={$formatter.formatted} />
+```
+
 ## 🔗 Links
 
 * 📁 GitHub: [https://github.com/dev-henen/svelte-number-formatter](https://github.com/dev-henen/svelte-number-formatter)
