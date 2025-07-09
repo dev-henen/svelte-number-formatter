@@ -17,7 +17,7 @@ Supports:
 
 ```bash
 npm install svelte-number-formatter
-````
+```
 
 ### From GitHub Packages
 
@@ -45,10 +45,7 @@ const formatter = new NumberFormatter();
 <script lang="ts">
 	import { NumberFormatter } from 'svelte-number-formatter';
 
-	const formatter = new NumberFormatter('', {
-		style: 'decimal',
-		decimals: 2
-	});
+	const formatter = new NumberFormatter();
 </script>
 
 <input bind:value={formatter.handler} />
@@ -57,20 +54,16 @@ const formatter = new NumberFormatter();
 <p>Formatted: {formatter.formatted}</p>
 ```
 
-or
+or, using a local value:
 
 ```svelte
 <script lang="ts">
 	import { NumberFormatter } from 'svelte-number-formatter';
 
-	const formatter = new NumberFormatter('', {
-		style: 'decimal',
-		decimals: 2
-	});
+	const formatter = new NumberFormatter();
 
 	let value = formatter.formatted;
 
-	// Sync user input into formatter
 	$: formatter.handler = value;
 </script>
 
@@ -82,11 +75,51 @@ or
 
 ---
 
+## ⚠️ Important: Don't Pass Format Options When Binding `.handler`
+
+When binding `formatter.handler` directly to an `<input>`:
+
+```svelte
+<input bind:value={formatter.handler} />
+```
+
+**❗ Do not pass formatting options to the constructor.**
+
+Doing this:
+
+```ts
+// ⚠️ Don't do this when binding handler
+const formatter = new NumberFormatter("1234.5", {
+	style: 'currency',
+	currency: 'USD',
+	decimals: 2
+});
+```
+
+...will cause the value to be **instantly formatted while typing**, which leads to a frustrating user experience (e.g., jumping cursors, blocked input).
+
+### ✅ Instead, do this:
+
+```ts
+// ✅ No formatting options when using .handler
+const formatter = new NumberFormatter("1234.5");
+```
+
+Or simply:
+
+```ts
+const formatter = new NumberFormatter();
+```
+
+You can still use `.format()` or `setOptions()` later for formatting output.
+
+---
+
 ## 🔧 API
 
 ### `constructor(initial?: string, options?: FormatOptions)`
 
-Create a new formatter with optional initial value and format options.
+Create a new formatter with an optional initial value and formatting options (only when not binding `handler` to an input).
 
 ### Properties
 
@@ -96,7 +129,7 @@ Create a new formatter with optional initial value and format options.
 | `raw`       | `string` | The numeric value stripped of symbols              |
 | `formatted` | `string` | The value formatted for display (`12,345.67`)      |
 
-> 🔁 Setting `.handler = "12345"` will automatically set both `.raw` and `.formatted`.
+> 🔁 Setting `.handler = "12345"` will automatically update `.raw` and `.formatted`.
 
 ---
 
@@ -116,11 +149,11 @@ formatter.setOptions({
 
 ```ts
 {
-	locale?: string;           // e.g., "en-US"
-	useGrouping?: boolean;     // commas (true by default)
-	decimals?: number;         // number of decimal places (default 0)
-	currency?: string;         // e.g., "USD"
-	style?: 'decimal' | 'currency';  // default: 'decimal'
+	locale?: string;               // e.g., "en-US"
+	useGrouping?: boolean;         // commas (true by default)
+	decimals?: number;             // decimal places (default 0)
+	currency?: string;             // e.g., "USD"
+	style?: 'decimal' | 'currency' // default: 'decimal'
 }
 ```
 
@@ -149,25 +182,31 @@ formatter.format("123456.789"); // → "123,456.79" or "$123,456.79"
 ## ✅ Example Use Case
 
 ```ts
-const formatter = new NumberFormatter('', {
+const formatter = new NumberFormatter();
+
+formatter.handler = '456789.123';
+
+console.log(formatter.formatted); // "456,789.12"
+console.log(formatter.raw);       // "456789.123"
+```
+
+To format as currency manually:
+
+```ts
+formatter.setOptions({
 	style: 'currency',
 	currency: 'USD',
 	decimals: 2
 });
-
-formatter.handler = '456789.123';
-
-console.log(formatter.formatted); // "$456,789.12"
-console.log(formatter.raw);       // "456789.123"
 ```
 
 ---
 
 ## 🧠 Notes
 
-* Designed for use with `<input type="text" />`
-* Avoid using `bind:value` directly with `.formatted`; use a local `value` and sync via `$:`
-* Perfect for form fields, dashboards, admin panels, and finance apps
+* `handler` acts as a two-way reactive setter for `<input>` elements.
+* Avoid formatting options when binding directly to input (`bind:value={formatter.handler}`).
+* Ideal for form fields, dashboards, admin panels, and finance apps.
 
 ---
 
@@ -190,5 +229,3 @@ MIT © [dev-henen](https://github.com/dev-henen)
 * [ ] `use:numberFormatter` Svelte action
 * [ ] Store-based interface (`formatter.subscribe()`)
 * [ ] Auto-detection of locale from browser
-
-```
