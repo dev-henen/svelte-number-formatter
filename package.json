@@ -7,6 +7,7 @@
   "types": "./dist/types/NumberFormatter.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/types/NumberFormatter.d.ts",
       "require": "./dist/cjs/NumberFormatter.js",
       "import": "./dist/esm/NumberFormatter.mjs"
     }
