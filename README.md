@@ -1,28 +1,31 @@
 # 🔢 svelte-number-formatter
 
-A lightweight, reactive number formatter utility for **Svelte + TypeScript** with advanced validation and formatting capabilities.
+A powerful, reactive number formatter utility for **Svelte + TypeScript** with comprehensive validation, real-time formatting, and extensive customization options.
 
-Supports:
+## ✨ Features
 
-* Live number formatting for inputs (`12,345.67`, `$1,000.00`, `15.25%`, etc.)
-* Extraction of clean raw values (`12345.67`)
-* Currency, locale, decimal, and percentage formatting
-* Real-time input validation with error/warning messages
-* Min/max value constraints and custom prefix/suffix
-* Seamless integration with Svelte reactivity
+* **Live number formatting** for inputs (`12,345.67`, `$1,000.00`, `85%`, etc.)
+* **Input validation** with custom error messages and warnings
+* **Multiple formatting styles** (decimal, currency, percentage)
+* **Locale-aware formatting** with automatic browser detection
+* **Real-time reactive updates** with Svelte store integration
+* **Comprehensive input cleaning** and sanitization
+* **Min/max value validation** with custom ranges
+* **Prefix/suffix support** for custom formatting
+* **Strict mode** for rejecting invalid input
+* **Increment/decrement utilities** for stepper controls
+* **TypeScript support** with full type definitions
 
 ---
 
 ## 📦 Installation
 
 ### From npm (public)
-
 ```bash
 npm install svelte-number-formatter
 ```
 
 ### From GitHub Packages
-
 ```bash
 npm install @dev-henen/svelte-number-formatter --registry=https://npm.pkg.github.com
 ```
@@ -46,12 +49,10 @@ const formatter = new NumberFormatter();
 ```svelte
 <script lang="ts">
 	import { NumberFormatter } from 'svelte-number-formatter';
-
 	const formatter = new NumberFormatter();
 </script>
 
 <input bind:value={formatter.handler} />
-
 <p>Raw: {formatter.raw}</p>
 <p>Formatted: {formatter.formatted}</p>
 <p>Numeric Value: {formatter.value}</p>
@@ -62,188 +63,169 @@ or, using a local value:
 ```svelte
 <script lang="ts">
 	import { NumberFormatter } from 'svelte-number-formatter';
-
 	const formatter = new NumberFormatter();
-
 	let value = formatter.formatted;
-
 	$: formatter.handler = value;
-	$: validation = formatter.getValidation();
 </script>
 
-<input 
-	bind:value={value} 
-	class:error={!formatter.isValid()}
-/>
-
+<input bind:value={value} />
 <p>Raw: {formatter.raw}</p>
 <p>Formatted: {formatter.formatted}</p>
-
-{#if !validation.isValid}
-	<p class="error">{validation.error}</p>
-{/if}
 ```
 
 ---
 
-## 🔧 API
+## 🔧 Constructor
 
-### `constructor(initial?: string | number, options?: FormatOptions)`
+### `new NumberFormatter(initial?, options?)`
 
-Create a new formatter with an optional initial value and formatting options.
+Create a new formatter with optional initial value and formatting options.
 
-### Properties
+```ts
+const formatter = new NumberFormatter("1234.56", {
+	style: 'currency',
+	currency: 'USD',
+	decimals: 2,
+	useGrouping: true
+});
+```
+
+---
+
+## 📊 Properties
 
 | Property    | Type     | Description                                        |
 | ----------- | -------- | -------------------------------------------------- |
 | `handler`   | `string` | Input setter that auto-updates `raw` + `formatted` |
 | `raw`       | `string` | The numeric value stripped of symbols              |
 | `formatted` | `string` | The value formatted for display (`12,345.67`)      |
-| `value`     | `number` | The current numeric value                          |
-| `validation`| `Readable<ValidationResult>` | Reactive validation state |
-| `isEditing` | `Readable<boolean>` | Whether formatter is being edited |
-| `numericValue` | `Readable<number>` | Derived numeric value store |
+| `value`     | `number` | The parsed numeric value                           |
 
-> 🔁 Setting `.handler = "12345"` will automatically update `.raw`, `.formatted`, and validation state.
+### Reactive Stores
+
+| Store          | Type                    | Description                           |
+| -------------- | ----------------------- | ------------------------------------- |
+| `validation`   | `Readable<ValidationResult>` | Current validation state          |
+| `isEditing`    | `Readable<boolean>`     | Whether input is currently being edited |
+| `numericValue` | `Readable<number>`      | Parsed numeric value as store         |
+
+> 🔁 Setting `.handler = "12345"` will automatically update `.raw`, `.formatted`, and `.value`.
 
 ---
 
-## ⚙️ `setOptions(options: Partial<FormatOptions>)`
+## ⚙️ Configuration Options
 
-Update locale, decimals, grouping, currency format, validation rules, and more.
+### `setOptions(options: Partial<FormatOptions>)`
+
+Update formatting options dynamically:
 
 ```ts
 formatter.setOptions({
 	style: 'currency',
-	currency: 'USD',
+	currency: 'EUR',
 	decimals: 2,
 	min: 0,
-	max: 10000,
-	prefix: '$',
-	allowNegative: false
+	max: 10000
 });
 ```
 
 ### FormatOptions
 
 ```ts
-{
-	locale?: string;               // e.g., "en-US"
-	useGrouping?: boolean;         // commas (true by default)
-	decimals?: number;             // decimal places (default 0)
-	currency?: string;             // e.g., "USD"
-	style?: 'decimal' | 'currency' | 'percent'; // default: 'decimal'
-	allowNegative?: boolean;       // allow negative numbers (default: true)
-	allowDecimal?: boolean;        // allow decimal points (default: true)
-	min?: number;                  // minimum value constraint
-	max?: number;                  // maximum value constraint
-	prefix?: string;               // custom prefix text
-	suffix?: string;               // custom suffix text
-	placeholder?: string;          // placeholder when empty
-	strict?: boolean;              // reject invalid input entirely (default: false)
-}
+type FormatOptions = {
+	locale?: string;                           // e.g., "en-US", "de-DE"
+	useGrouping?: boolean;                     // thousand separators (default: true)
+	decimals?: number;                         // decimal places (default: 0)
+	currency?: string;                         // e.g., "USD", "EUR"
+	style?: "decimal" | "currency" | "percent"; // formatting style
+	allowNegative?: boolean;                   // allow negative numbers (default: true)
+	allowDecimal?: boolean;                    // allow decimal input (default: true)
+	min?: number;                              // minimum value
+	max?: number;                              // maximum value
+	prefix?: string;                           // custom prefix
+	suffix?: string;                           // custom suffix
+	placeholder?: string;                      // placeholder for empty values
+	strict?: boolean;                          // reject invalid input (default: false)
+};
 ```
 
 ---
 
-## 🎯 Core Methods
+## 🎯 Methods
 
-### `reset()`
+### Core Methods
 
-Clear both raw and formatted values and reset validation state.
-
-```ts
-formatter.reset();
-```
-
-### `format(value: string | number): string`
-
+#### `format(value: string | number): string`
 Format a raw number programmatically:
-
 ```ts
 formatter.format("123456.789"); // → "123,456.79" or "$123,456.79"
 ```
 
-### `setValue(value: string | number)`
-
-Programmatically set a value with validation:
-
+#### `setValue(value: string | number): void`
+Set the value programmatically:
 ```ts
 formatter.setValue(1234.56);
-console.log(formatter.formatted); // "1,234.56"
 ```
 
----
+#### `reset(): void`
+Clear all values and reset validation state:
+```ts
+formatter.reset();
+```
 
-## ✅ Validation Methods
+### Validation Methods
 
-### `isValid(): boolean`
-
-Check if the current value passes validation:
-
+#### `isValid(): boolean`
+Check if current value is valid:
 ```ts
 if (formatter.isValid()) {
-	console.log("Value is valid!");
+	// proceed with valid value
 }
 ```
 
-### `getValidation(): ValidationResult`
-
+#### `getValidation(): ValidationResult`
 Get detailed validation information:
-
 ```ts
 const validation = formatter.getValidation();
-if (!validation.isValid) {
-	console.error(validation.error);
-}
-if (validation.warning) {
-	console.warn(validation.warning);
-}
+console.log(validation.isValid, validation.error, validation.warning);
+```
+
+### Utility Methods
+
+#### `increment(step?: number): void`
+Increment the current value:
+```ts
+formatter.increment(1);    // +1
+formatter.increment(10);   // +10
+```
+
+#### `decrement(step?: number): void`
+Decrement the current value:
+```ts
+formatter.decrement(1);    // -1
+formatter.decrement(5);    // -5
+```
+
+#### `focus(): void` / `blur(): void`
+Simulate focus/blur for form integration:
+```ts
+formatter.focus();  // sets isEditing to true
+formatter.blur();   // sets isEditing to false
 ```
 
 ---
 
-## 🎮 Value Manipulation
+## 📡 Subscription Methods
 
-### `increment(step?: number)` / `decrement(step?: number)`
+### Enhanced Subscription
 
-Modify values programmatically:
-
-```ts
-formatter.increment();    // +1
-formatter.increment(5);   // +5
-formatter.decrement();    // -1
-formatter.decrement(10);  // -10
-```
-
----
-
-## 🔗 Form Integration
-
-### `focus()` / `blur()`
-
-Simulate focus states for form integration:
+Subscribe to all formatter state changes:
 
 ```ts
-formatter.focus();  // Sets isEditing to true
-formatter.blur();   // Sets isEditing to false
-```
-
----
-
-## 📡 Enhanced Subscriptions
-
-### `subscribe(run)`
-
-Subscribe to all state changes:
-
-```ts
-const formatter = new NumberFormatter("12345");
-
 const unsubscribe = formatter.subscribe(({ raw, formatted, value, validation, isEditing }) => {
 	console.log("Raw:", raw);
 	console.log("Formatted:", formatted);
-	console.log("Numeric:", value);
+	console.log("Value:", value);
 	console.log("Valid:", validation.isValid);
 	console.log("Editing:", isEditing);
 });
@@ -251,207 +233,266 @@ const unsubscribe = formatter.subscribe(({ raw, formatted, value, validation, is
 
 ### Convenience Subscriptions
 
+#### `subscribeFormatted(run: Subscriber<string>): Unsubscriber`
 ```ts
-// Subscribe to formatted value only
-formatter.subscribeFormatted(formatted => console.log(formatted));
-
-// Subscribe to raw value only
-formatter.subscribeRaw(raw => console.log(raw));
-
-// Subscribe to numeric value only
-formatter.subscribeValue(value => console.log(value));
-```
-
----
-
-## 🧮 Static Utilities
-
-### `NumberFormatter.formatValue(value, options)`
-
-One-off formatting without creating an instance:
-
-```ts
-const formatted = NumberFormatter.formatValue(1234.56, {
-	style: 'currency',
-	currency: 'EUR',
-	decimals: 2
+const unsubscribe = formatter.subscribeFormatted(formatted => {
+	console.log("Formatted:", formatted);
 });
-console.log(formatted); // "€1,234.56"
 ```
 
-### `NumberFormatter.parseValue(formattedValue)`
-
-Parse a formatted string back to a number:
-
+#### `subscribeRaw(run: Subscriber<string>): Unsubscriber`
 ```ts
-const number = NumberFormatter.parseValue("$1,234.56");
-console.log(number); // 1234.56
+const unsubscribe = formatter.subscribeRaw(raw => {
+	console.log("Raw:", raw);
+});
+```
+
+#### `subscribeValue(run: Subscriber<number>): Unsubscriber`
+```ts
+const unsubscribe = formatter.subscribeValue(value => {
+	console.log("Value:", value);
+});
 ```
 
 ---
 
-## 💡 Advanced Examples
+## 🔍 Validation System
 
-### Currency Input with Validation
+The formatter includes a comprehensive validation system:
+
+### ValidationResult Type
+
+```ts
+type ValidationResult = {
+	isValid: boolean;
+	error?: string;     // Validation error message
+	warning?: string;   // Warning message (non-blocking)
+};
+```
+
+### Example with Validation
 
 ```svelte
 <script lang="ts">
 	import { NumberFormatter } from 'svelte-number-formatter';
+	
+	const formatter = new NumberFormatter("", {
+		min: 0,
+		max: 100,
+		decimals: 2,
+		strict: true
+	});
+	
+	let validation = formatter.getValidation();
+	$: validation = $formatter.validation;
+</script>
 
+<input bind:value={formatter.handler} />
+
+{#if !validation.isValid}
+	<p class="error">{validation.error}</p>
+{/if}
+
+{#if validation.warning}
+	<p class="warning">{validation.warning}</p>
+{/if}
+```
+
+---
+
+## 🌍 Localization Examples
+
+### Currency Formatting
+
+```ts
+// US Dollar
+const usdFormatter = new NumberFormatter("1234.56", {
+	style: 'currency',
+	currency: 'USD',
+	locale: 'en-US'
+});
+// → "$1,234.56"
+
+// Euro
+const eurFormatter = new NumberFormatter("1234.56", {
+	style: 'currency',
+	currency: 'EUR',
+	locale: 'de-DE'
+});
+// → "1.234,56 €"
+```
+
+### Percentage Formatting
+
+```ts
+const percentFormatter = new NumberFormatter("0.85", {
+	style: 'percent',
+	decimals: 1
+});
+// → "85.0%"
+```
+
+### Custom Prefix/Suffix
+
+```ts
+const customFormatter = new NumberFormatter("42", {
+	prefix: "Score: ",
+	suffix: " pts",
+	useGrouping: false
+});
+// → "Score: 42 pts"
+```
+
+---
+
+## 🎛️ Advanced Usage Examples
+
+### Stepper Input Component
+
+```svelte
+<script lang="ts">
+	import { NumberFormatter } from 'svelte-number-formatter';
+	
+	const formatter = new NumberFormatter("0", {
+		min: 0,
+		max: 100,
+		decimals: 0
+	});
+</script>
+
+<div class="stepper">
+	<button on:click={() => formatter.decrement()}>-</button>
+	<input bind:value={formatter.handler} />
+	<button on:click={() => formatter.increment()}>+</button>
+</div>
+
+<p>Value: {formatter.value}</p>
+```
+
+### Form Integration with Validation
+
+```svelte
+<script lang="ts">
+	import { NumberFormatter } from 'svelte-number-formatter';
+	
 	const priceFormatter = new NumberFormatter("", {
 		style: 'currency',
 		currency: 'USD',
 		decimals: 2,
 		min: 0,
-		max: 999999.99,
-		placeholder: "$0.00"
+		max: 999999,
+		strict: true
 	});
-
-	let price = "";
-	$: priceFormatter.handler = price;
+	
+	$: isValid = $priceFormatter.validation.isValid;
 </script>
 
-<input 
-	bind:value={price}
-	placeholder={priceFormatter.options.placeholder}
-	class:error={!priceFormatter.isValid()}
-/>
-
-{#if !priceFormatter.isValid()}
-	<div class="error">{priceFormatter.getValidation().error}</div>
-{/if}
-```
-
-### Percentage Input
-
-```svelte
-<script lang="ts">
-	import { NumberFormatter } from 'svelte-number-formatter';
-
-	const percentFormatter = new NumberFormatter("", {
-		style: 'percent',
-		decimals: 2,
-		min: 0,
-		max: 100
-	});
-</script>
-
-<input bind:value={percentFormatter.handler} />
-<p>Formatted: {percentFormatter.formatted}</p>
-```
-
-### Quantity Stepper
-
-```svelte
-<script lang="ts">
-	import { NumberFormatter } from 'svelte-number-formatter';
-
-	const quantityFormatter = new NumberFormatter("1", {
-		style: 'decimal',
-		decimals: 0,
-		min: 1,
-		max: 100,
-		allowDecimal: false
-	});
-</script>
-
-<button on:click={() => quantityFormatter.decrement()}>-</button>
-<input bind:value={quantityFormatter.handler} />
-<button on:click={() => quantityFormatter.increment()}>+</button>
+<form>
+	<label>
+		Price:
+		<input 
+			bind:value={priceFormatter.handler}
+			class:invalid={!isValid}
+		/>
+	</label>
+	
+	{#if !isValid}
+		<span class="error">{$priceFormatter.validation.error}</span>
+	{/if}
+	
+	<button type="submit" disabled={!isValid}>
+		Submit
+	</button>
+</form>
 ```
 
 ---
 
-## 📥 `use:numberFormatter` Svelte Action
+## 🔧 Static Utility Methods
 
-Easily format `<input>` values using a Svelte action. Live formatting occurs while typing, and formatting options (e.g., currency) are **applied only on blur** to avoid cursor issues.
+### `NumberFormatter.formatValue(value, options?): string`
 
-#### ✅ Usage
-
-```svelte
-<script lang="ts">
-	import { numberFormatter } from 'svelte-number-formatter';
-	let raw = '';
-</script>
-
-<input
-	use:numberFormatter={{
-		options: {
-			style: 'currency',
-			currency: 'USD',
-			decimals: 2,
-			min: 0,
-			max: 10000
-		},
-		onChange: (rawVal, formattedVal) => {
-			raw = rawVal;
-		}
-	}} />
-
-<p>Raw value: {raw}</p>
-```
-
-#### 📌 Notes
-
-* **Avoids passing options to constructor** — keeps typing smooth and uninterrupted.
-* Formatting options are applied only when the input **blurs**.
-* `onChange(raw, formatted)` is triggered on each update.
-* Ideal for declarative usage in forms and custom inputs.
-
-#### 🔧 Parameters
-
-| Key        | Type                               | Description                          |
-| ---------- | ---------------------------------- | ------------------------------------ |
-| `options`  | `FormatOptions`                    | Formatting options (applied on blur) |
-| `onChange` | `(raw: string, formatted: string)` | Callback on input change or blur     |
-
----
-
-## 🌐 Internationalization
-
-Locale is automatically detected from the browser (`navigator.language`), or defaults to `"en-US"` in SSR/Node environments:
+Format a value without creating a formatter instance:
 
 ```ts
-// German locale with Euro currency
-const formatter = new NumberFormatter("1234.56", {
-	locale: 'de-DE',
+const formatted = NumberFormatter.formatValue(1234.56, {
 	style: 'currency',
-	currency: 'EUR'
+	currency: 'USD'
 });
-console.log(formatter.formatted); // "1.234,56 €"
+// → "$1,234.56"
+```
 
-// French locale with custom formatting
-const formatter2 = new NumberFormatter("1234.56", {
-	locale: 'fr-FR',
-	useGrouping: true,
-	decimals: 2
-});
-console.log(formatter2.formatted); // "1 234,56"
+### `NumberFormatter.parseValue(formattedValue): number`
+
+Parse a formatted value back to a number:
+
+```ts
+const value = NumberFormatter.parseValue("$1,234.56");
+// → 1234.56
 ```
 
 ---
 
-## 🛡️ Validation Features
+## 📚 Common Use Cases
 
-The formatter includes comprehensive validation:
-
-- **Type validation**: Ensures input is numeric
-- **Range validation**: Respects min/max constraints
-- **Format validation**: Validates decimal places, negative numbers
-- **Real-time feedback**: Immediate error/warning messages
-- **Strict mode**: Optionally reject invalid input entirely
-
+### 1. **Financial Applications**
 ```ts
-const formatter = new NumberFormatter("", {
-	min: 0,
-	max: 100,
+const moneyFormatter = new NumberFormatter("", {
+	style: 'currency',
+	currency: 'USD',
 	decimals: 2,
-	strict: true
+	min: 0
 });
-
-formatter.handler = "150"; // Will be rejected in strict mode
-console.log(formatter.getValidation().error); // "Value must be at most 100"
 ```
+
+### 2. **Percentage Inputs**
+```ts
+const percentFormatter = new NumberFormatter("", {
+	style: 'percent',
+	decimals: 1,
+	min: 0,
+	max: 1
+});
+```
+
+### 3. **Quantity Inputs**
+```ts
+const quantityFormatter = new NumberFormatter("1", {
+	decimals: 0,
+	min: 1,
+	max: 999,
+	useGrouping: false
+});
+```
+
+### 4. **Scientific Notation**
+```ts
+const scientificFormatter = new NumberFormatter("", {
+	decimals: 3,
+	useGrouping: false,
+	allowNegative: true
+});
+```
+
+---
+
+## 🌐 Browser Compatibility
+
+- **Locale Detection**: Automatically detects browser locale via `navigator.language`
+- **SSR Support**: Defaults to "en-US" in server-side environments
+- **Modern Browsers**: Uses `Intl.NumberFormat` for reliable formatting
+- **Fallback**: Graceful degradation if formatting fails
+
+---
+
+## 🧠 Notes
+
+* `handler` acts as a two-way reactive setter for `<input>` elements
+* Validation runs automatically on every input change
+* Strict mode (`strict: true`) rejects invalid input entirely
+* Non-strict mode allows invalid input but marks it as invalid
+* Locale is automatically detected from browser settings
+* All stores are reactive and integrate seamlessly with Svelte's reactivity system
 
 ---
 
@@ -469,9 +510,6 @@ MIT © [dev-henen](https://github.com/dev-henen)
 
 ---
 
-## 🙌 Coming Soon
+## 🙌 Contributing
 
-* Custom validation rules
-* Async validation support
-* Advanced formatting patterns
-* Integration with popular form libraries
+Contributions are welcome! Please feel free to submit a Pull Request.
